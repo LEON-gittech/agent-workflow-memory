@@ -7,9 +7,9 @@ import tiktoken
 logger = logging.getLogger("main")
 
 import openai
-openai.api_key = os.environ["OPENAI_API_KEY"]
+# openai.api_key = os.environ["OPENAI_API_KEY"]
 from openai import OpenAI
-client = OpenAI()
+# client = OpenAI()
 
 
 def num_tokens_from_messages(messages, model):
@@ -102,6 +102,11 @@ def get_mode(model: str) -> str:
 #     (APIError, RateLimitError, APIConnectionError),
 #     interval=10,
 # )
+client = openai.AzureOpenAI(
+    azure_endpoint="https://gpt-i18n.byteintl.net/gpt/openapi/online/v2/crawl",
+    api_version="2023-03-15-preview",
+    api_key="ZTdRdW0x9nTlFtjGVOdEC9UTVrwplMXp"
+)
 def generate_response(
     messages: list[dict[str, str]],
     model: str,
@@ -117,13 +122,22 @@ def generate_response(
     gen_kwargs = {}
 
     if get_mode(model) == "chat":
+        # print(messages)
         response = client.chat.completions.create(
-            model=model,
+            extra_headers={"X-TT-LOGID": "cyqyong1231241241"},  # 请务必带上此header，方便定位问题
+            model="gpt-35-turbo",
             messages=messages,
             temperature=temperature,
             stop=stop_tokens if stop_tokens else None,
             **gen_kwargs
         )
+        # response = client.chat.completions.create(
+        #     model=model,
+        #     messages=messages,
+        #     temperature=temperature,
+        #     stop=stop_tokens if stop_tokens else None,
+        #     **gen_kwargs
+        # )
         message = response.choices[0].message.content
     else:
         prompt = "\n\n".join(m["content"] for m in messages) + "\n\n"

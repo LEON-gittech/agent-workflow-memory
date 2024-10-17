@@ -1,0 +1,27 @@
+## search_parking_near_location
+Given that you are on the SpotHero parking search page, this workflow searches for parking near a specific location.
+[link]  {best-popup-option} -> CLICK
+[textbox]  Search for parking -> TYPE: {location}
+[link]  {best-popup-option} -> CLICK
+
+## select_monthly_parking
+Given that you are on the SpotHero parking search page, this workflow selects monthly parking.
+[tab]  Monthly -> CLICK
+
+## select_sort_by_price
+Given that you are on the SpotHero parking search page, this workflow sorts the parking options by price.
+[dropdown]  Sort by -> SELECT: Price
+
+## select_monthly_start_date
+Given that you are on the SpotHero parking search page, this workflow selects the start date for monthly parking.
+[textbox]  Monthly Start Date -> TYPE: {start-date}
+
+## book_parking
+Given that you are on the SpotHero parking search page, this workflow books the selected parking spot.
+[a]  Book Now -> CLICK
+
+## contact_support
+Given that you are on the SpotHero website, this workflow contacts the support service.
+[link]  Contact Us -> CLICK
+
+Note: There are no common workflows across the given tasks.

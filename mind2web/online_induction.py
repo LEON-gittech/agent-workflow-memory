@@ -6,9 +6,9 @@ import argparse
 from utils.data import load_json, format_examples, filter_workflows
 
 import openai
-openai.api_key = os.environ["OPENAI_API_KEY"]
+# openai.api_key = os.environ["OPENAI_API_KEY"]
 from openai import OpenAI
-client = OpenAI()
+# client = OpenAI()
 
 
 def is_io_dict(item: dict | str) -> bool:
@@ -27,6 +27,11 @@ def get_trajectory(path: str):
         trajectory.append(step)
     return trajectory
 
+client = openai.AzureOpenAI(
+    azure_endpoint="https://gpt-i18n.byteintl.net/gpt/openapi/online/v2/crawl",
+    api_version="2023-03-15-preview",
+    api_key="ZTdRdW0x9nTlFtjGVOdEC9UTVrwplMXp"
+)
 
 def main():
     samples = load_json(args.data_dir, args.benchmark)
@@ -35,6 +40,7 @@ def main():
     print(f"Filtering down to #{len(samples)} examples on website [{args.website}]")
     
     # load model predictions and format examples
+    print(f"result_files {args.results_dir}")
     result_files = [os.path.join(args.results_dir, f) for f in os.listdir(args.results_dir)]
     result_list = [get_trajectory(rf) for rf in result_files]
     examples = []
@@ -51,7 +57,8 @@ def main():
     domain, subdomain, website = samples[0]["domain"], samples[0]["subdomain"], samples[0]["website"]
     prompt = '\n\n'.join([INSTRUCTION, ONE_SHOT, f"Website: {domain}, {subdomain}, {website}\n{prompt}"])
     response = client.chat.completions.create(
-            model=args.model_name,
+            extra_headers={"X-TT-LOGID": "cyqyong1231241241"},
+            model='gpt-35-turbo',
             messages=[{"role": "user", "content": prompt}],
             temperature=args.temperature,
     ).choices[0].message.content

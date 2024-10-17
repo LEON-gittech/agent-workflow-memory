@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 
 def get_exemplars(args) -> list:
-    """Get exemplar workflows in the prompt."""
+    """Get exemplar workflows in the prompt. from workflow path"""
     # workflow memory
     memory = []
     workflow_text = open(args.workflow_path, 'r').read().strip()
     if len(workflow_text):
         memory = [[{"role": "user", "content": workflow_text}]]
-
+    print(args.domain, args.subdomain, args.website)
     # concrete examples
     with open(os.path.join(args.memory_path, "exemplars.json"), "r") as f:
         concrete_examples = json.load(f)
@@ -45,9 +45,9 @@ def eval_sample(task_id, args, sample):
     element_acc, action_f1, step_success, success = [], [], [], []
     token_stats = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
     conversation = []
-    episode_length = len(sample["action_reprs"])
+    episode_length = len(sample["action_reprs"]) # 选项长度
 
-    exemplars = get_exemplars(args)
+    exemplars = get_exemplars(args) # 选取该 website 已有的 workflow，以及retrieve_top_k（默认为 1）的 相似 example，从 exemplars.json 中选择该 website 或者该 subdomain 的 example，然后 random 采样args.retrieve_top_k个
     # print(exemplars)
 
     sys_message = [

@@ -1,0 +1,47 @@
+## create_flight_status_notification
+Given that you are on the AA flight status page, this workflow creates a flight status notification with the specified flight details and email.
+[link]  Flight status -> CLICK
+[link]  Create flight status notification -> CLICK
+[textbox]  From , required. -> TYPE: {departure-city}
+[a]  {departure-airport} -> CLICK
+[textbox]  To , required. -> TYPE: {destination-city}
+[a]  {destination-airport} -> CLICK
+[button]  View Calendar: To navigate the calendar, use the... -> CLICK
+[link]  {flight-date} -> CLICK
+[button]  Search -> CLICK
+[button]  Get alerts for this flight for flight {flight-number} of American... -> CLICK
+[textbox]  Email -> TYPE: {email}
+[textbox]  Confirm email -> TYPE: {email}
+[button]  Save -> CLICK
+
+## search_flight
+Given that you are on the AA flight search page, this workflow searches for flights based on the specified criteria.
+[textbox]  From -> TYPE: {departure-city}
+[a]  {departure-airport} -> CLICK
+[textbox]  To -> TYPE: {destination-city}
+[a]  {destination-airport} -> CLICK
+[button]  View Calendar: To navigate the calendar, use the... -> CLICK
+[link]  {departure-date} -> CLICK
+[button]  View Calendar: To navigate the calendar, use the... -> CLICK
+[link]  {return-date} -> CLICK
+[button]  Search -> CLICK
+
+## find_hotel
+Given that you are on the AA hotel search page, this workflow finds the cheapest hotel in the specified city for the specified date and number of guests.
+[searchbox]  Type your destination -> TYPE: {city}
+[option]  {city} -> CLICK
+[checkbox]  {check-in-date} -> CLICK
+[checkbox]  {check-out-date} -> CLICK
+[combobox]  {number-of-guests} -> SELECT: {guest-option}
+[button]  Search -> CLICK
+[menuitem]  Price (lowest first) -> CLICK
+[link]  {hotel-name} -> CLICK
+
+## search_jobs
+Given that you are on the AA job search page, this workflow searches for jobs based on the specified job title and location.
+[link]  We're hiring! Join our team , Opens another site i... -> CLICK
+[button]  Careers  -> CLICK
+[link]  View All Jobs -> CLICK
+[textbox]  Search by Keyword -> TYPE: {job-title}
+[textbox]  Search by Location -> TYPE: {location}
+[button]  Search Jobs -> CLICK

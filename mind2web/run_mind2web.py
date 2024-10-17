@@ -16,8 +16,8 @@ def main():
     examples = load_json(args.data_dir, args.benchmark)
     examples = [s for s in examples if s["website"] == args.website]
     print(f"Filtering down to #{len(examples)} examples on website [{args.website}]")
-    examples = add_scores(examples) # add prediction scores and ranks to elements
-
+    examples = add_scores(examples) # add prediction scores and ranks to elements，refer to actions
+    # print(f"examples after adding scores {examples[0]}")
     if args.end_idx is None:
         args.end_idx = len(examples)
     for i in tqdm(range(args.start_idx, args.end_idx)):
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     parser.add_argument("--end_idx", type=int, default=None, help="Select example index.")
 
     args = parser.parse_args()
-
+    print(f"workflow args {args}")
     # sanity check
     if not os.path.exists(args.workflow_path): open(args.workflow_path, 'w').close()
     if args.retrieve_top_k != 1: print(f"Suggest set `retrieve_top_k` to 1, currently as {args.retrieve_top_k}")

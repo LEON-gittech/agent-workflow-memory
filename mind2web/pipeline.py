@@ -33,6 +33,7 @@ def online():
         samples = [s for s in samples if s["website"] == args.website]
         print(f"Filtering down to #{len(samples)} examples on website [{args.website}]")
     n = len(samples)
+    print(f"There are total {n} task in this website.")
     
     for i in range(0, n, args.induce_steps):
         j = min(n, i + args.induce_steps)
@@ -45,10 +46,11 @@ def online():
             '--website', args.website, 
             '--start_idx', f'{i}', '--end_idx', f'{j}',
             '--domain', args.domain, '--subdomain', args.subdomain,
+            '--model', args.model
         ])
         process.wait()
         print(f"Finished inference on {i}-{j} th example!\n")
-
+        print(f"j+1: {j+1} sample len: {len(samples)}")
         if (j + 1) < len(samples):
             process = subprocess.Popen([
                 'python', 'online_induction.py',
@@ -56,6 +58,7 @@ def online():
                 '--website', args.website,
                 '--results_dir', args.results_dir,
                 '--output_path', args.workflow_path,
+                '--model', args.model
             ])
             process.wait()
             print(f"Finished workflow induction with 0-{i} th examples!\n")

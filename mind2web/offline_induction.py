@@ -7,9 +7,10 @@ import argparse
 from utils.data import add_scores, format_examples, filter_workflows
 
 import openai
-openai.api_key = os.environ["OPENAI_API_KEY"]
+# openai.api_key = os.environ["OPENAI_API_KEY"]
 from openai import OpenAI
-client = OpenAI()
+# client = OpenAI()
+import requests
 
 # %% Data loading and processing
 def get_data_dict(paths: list[str]) -> dict:
@@ -49,23 +50,62 @@ def get_examples(data_dict: dict, tags: tuple[str, str, str]) -> list[dict]:
     domain, subdomain, website = tags
     return data_dict[domain][subdomain][website]
 
-
-# %% Prompt and generate
 def llm_generate(tags: tuple[str, str, str], examples: list[dict], args, verbose: bool = False):
-    """Call gpt model to generate workflows."""
     prompt = f"Website: " + ','.join(tags) + '\n'
     prompt += format_examples(examples, args.prefix, args.suffix)
     prompt = '\n\n'.join([args.INSTRUCTION, args.ONE_SHOT, prompt])
     if verbose: print("Prompt:\n", prompt, '\n\n')
-    response = client.chat.completions.create(
-            model=args.model_name,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=args.temperature,
-            max_tokens=1024,
+    client = openai.AzureOpenAI(
+        azure_endpoint="https://gpt-i18n.byteintl.net/gpt/openapi/online/v2/crawl",
+        api_version="2023-03-15-preview",
+        api_key="ZTdRdW0x9nTlFtjGVOdEC9UTVrwplMXp"
     )
-    response = response.choices[0].message.content
+    completion = client.chat.completions.create(
+        extra_headers={"X-TT-LOGID": "cyqyong1231241241"},  # 请务必带上此header，方便定位问题
+        model="gpt-35-turbo",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+    response = completion.choices[0].message.content
+    print(response)
     if verbose: print(response)
+    # while cnt!=2:
+    #     cnt+=1
+    #     response = requests.post(url, data=data, headers=headers)
+    #     try: 
+    #         output = response.json()["choices"][0]["message"]["content"]
+    #         break
+    #     except Exception as e:
+    #         print(f"gpt error {e}")
+    #         print(f"gpt output:\n")
+    #         try: 
+    #             print(response.__dict__)
+    #         except:
+    #             print(response)
+    #         time.sleep(1)
+    #         continue
     return response
+
+# %% Prompt and generate
+# def llm_generate(tags: tuple[str, str, str], examples: list[dict], args, verbose: bool = False):
+#     """Call gpt model to generate workflows."""
+#     prompt = f"Website: " + ','.join(tags) + '\n'
+#     prompt += format_examples(examples, args.prefix, args.suffix)
+#     prompt = '\n\n'.join([args.INSTRUCTION, args.ONE_SHOT, prompt])
+#     if verbose: print("Prompt:\n", prompt, '\n\n')
+#     response = client.chat.completions.create(
+#             model=args.model_name,
+#             messages=[{"role": "user", "content": prompt}],
+#             temperature=args.temperature,
+#             max_tokens=1024,
+#     )
+#     response = response.choices[0].message.content
+#     if verbose: print(response)
+#     return response
 
 # %% Save outputs
 def save_to_txt(text: str, args):
